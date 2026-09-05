@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" rx="96" fill="#8bac0f"/>
+  <rect x="32" y="32" width="448" height="448" rx="64" fill="#9bbc0f" stroke="#306230" stroke-width="12"/>
+  
+  <!-- Subtle LCD Grid effect -->
+  <pattern id="grid" width="16" height="16" patternUnits="userSpaceOnUse">
+    <path d="M 16 0 L 0 0 0 16" fill="none" stroke="#8bac0f" stroke-width="1.5" opacity="0.4"/>
+  </pattern>
+  <rect x="44" y="44" width="424" height="424" rx="52" fill="url(#grid)"/>
+
+  <!-- Pixel Snake -->
+  <g fill="#0f380f">
+    <!-- Snake Head -->
+    <rect x="280" y="160" width="48" height="48" rx="6"/>
+    <!-- Eyes -->
+    <rect x="304" y="172" width="12" height="12" fill="#9bbc0f"/>
+    <!-- Snake Body -->
+    <rect x="220" y="160" width="48" height="48" rx="6"/>
+    <rect x="160" y="160" width="48" height="48" rx="6"/>
+    <rect x="160" y="220" width="48" height="48" rx="6"/>
+    <rect x="160" y="280" width="48" height="48" rx="6"/>
+    <rect x="220" y="280" width="48" height="48" rx="6"/>
+    <rect x="280" y="280" width="48" height="48" rx="6"/>
+    <rect x="340" y="280" width="48" height="48" rx="6"/>
+    <rect x="340" y="340" width="48" height="48" rx="6"/>
+    <!-- Snake Tail -->
+    <rect x="280" y="340" width="48" height="48" rx="6"/>
+  </g>
+
+  <!-- Apple / Food -->
+  <g fill="#0f380f">
+    <rect x="360" y="160" width="36" height="36" rx="6"/>
+    <path d="M374 150 C 374 140 386 142 388 152" stroke="#0f380f" stroke-width="6" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- Retro badge label -->
+  <rect x="156" y="412" width="200" height="36" rx="8" fill="#306230"/>
+  <text x="256" y="437" fill="#9bbc0f" font-family="monospace, monospace" font-size="20" font-weight="900" text-anchor="middle" letter-spacing="4">SNAKE</text>
+</svg>

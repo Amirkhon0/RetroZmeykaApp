@@ -1,0 +1,6 @@
+{
+  "name": "Змейка",
+  "description": "Классическая мобильная ретро игра Змейка как на старых кнопочных телефонах.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
