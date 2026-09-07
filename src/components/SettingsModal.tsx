@@ -10,10 +10,7 @@ import {
   Smartphone,
   Check,
   Download,
-  Maximize2,
-  Minimize2,
   ShieldCheck,
-  Sparkles,
 } from 'lucide-react';
 
 interface SettingsModalProps {
@@ -21,8 +18,7 @@ interface SettingsModalProps {
   onClose: () => void;
   settings: GameSettings;
   onUpdateSettings: (newSettings: Partial<GameSettings>) => void;
-  isFullscreen: boolean;
-  onToggleFullscreen: () => void;
+  onOpenPrivacyPolicy?: () => void;
 }
 
 export const SettingsModal: React.FC<SettingsModalProps> = ({
@@ -30,8 +26,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   onClose,
   settings,
   onUpdateSettings,
-  isFullscreen,
-  onToggleFullscreen,
+  onOpenPrivacyPolicy,
 }) => {
   const { isInstallable, isInstalled, isIOS, install } = usePWAInstall();
   const [showIOSPrompt, setShowIOSPrompt] = useState(false);
@@ -60,17 +55,12 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     >
       <div
         id="modal-settings-content"
-        className="w-full max-w-md bg-stone-900 border border-stone-700 rounded-2xl p-4 sm:p-5 shadow-2xl text-stone-100 max-h-[90dvh] overflow-y-auto"
+        className="w-full max-w-md bg-stone-900 border border-stone-800 rounded-2xl p-4 sm:p-5 shadow-2xl text-stone-100 max-h-[90dvh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-stone-800">
-          <div className="flex items-center gap-2">
-            <h2 className="text-base font-retro text-emerald-400">НАСТРОЙКИ</h2>
-            <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-950 text-emerald-300 border border-emerald-800">
-              PRO
-            </span>
-          </div>
+        <div className="flex items-center justify-between pb-3 border-b border-stone-800 shrink-0">
+          <h2 className="text-base font-retro text-emerald-400">НАСТРОЙКИ</h2>
           <button
             id="btn-close-settings"
             onClick={onClose}
@@ -80,114 +70,47 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </button>
         </div>
 
-        <div className="py-3.5 space-y-4">
-          {/* Full Screen & Immersive Display Section */}
-          <div className="p-3 rounded-xl bg-stone-950/80 border border-stone-800 space-y-2.5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-mono font-bold text-stone-300 flex items-center gap-1.5">
-                <Maximize2 className="w-3.5 h-3.5 text-emerald-400" />
-                Экран и Режим игры
-              </span>
-              <span className="text-[10px] font-mono text-emerald-400 font-bold">
-                GOOGLE PLAY READY
-              </span>
-            </div>
-
-            <div className="w-full">
-              {/* Fullscreen Button */}
-              <button
-                onClick={() => {
-                  sound.playKeyClick();
-                  onToggleFullscreen();
-                }}
-                className={`w-full p-2.5 rounded-lg border text-left flex items-center justify-between transition-all ${
-                  isFullscreen
-                    ? 'border-emerald-500 bg-emerald-950/30 text-emerald-300'
-                    : 'border-stone-700 bg-stone-800/80 text-stone-300 hover:border-stone-600'
-                }`}
-              >
-                <div className="flex items-center gap-2">
-                  {isFullscreen ? (
-                    <Minimize2 className="w-4 h-4 text-emerald-400" />
-                  ) : (
-                    <Maximize2 className="w-4 h-4 text-stone-400" />
-                  )}
-                  <div>
-                    <p className="text-xs font-bold font-mono">На весь экран (Full Screen)</p>
-                    <p className="text-[9px] text-stone-400">
-                      {isFullscreen ? 'Полноэкранный режим активен' : 'Скрыть системные панели браузера'}
-                    </p>
-                  </div>
-                </div>
-                <span className="text-[10px] font-mono font-bold text-emerald-400">
-                  {isFullscreen ? 'ВКЛ' : 'ВКЛЮЧИТЬ'}
-                </span>
-              </button>
-            </div>
-
-            {/* Verification Checklist */}
-            <div className="pt-2 border-t border-stone-800/80 grid grid-cols-2 gap-1.5 text-[10px] font-mono text-stone-400">
-              <span className="flex items-center gap-1 text-emerald-400">
-                <ShieldCheck className="w-3 h-3" /> PWA Standalone
-              </span>
-              <span className="flex items-center gap-1 text-emerald-400">
-                <ShieldCheck className="w-3 h-3" /> Без адресной строки
-              </span>
-              <span className="flex items-center gap-1 text-emerald-400">
-                <ShieldCheck className="w-3 h-3" /> Офлайн режим
-              </span>
-              <span className="flex items-center gap-1 text-emerald-400">
-                <ShieldCheck className="w-3 h-3" /> Сенсор + Клавиатура
-              </span>
-            </div>
-          </div>
-
-          {/* PWA Install Banner */}
-          {!isInstalled && (
+        {/* Scrollable Settings List */}
+        <div className="py-3 space-y-4 overflow-y-auto pr-1">
+          {/* PWA Install Banner (only shown if not yet installed) */}
+          {!isInstalled && isInstallable && (
             <div className="p-3 rounded-xl bg-emerald-950/40 border border-emerald-500/30 flex items-center justify-between">
               <div>
                 <p className="text-xs font-bold text-emerald-300 font-retro">УСТАНОВИТЬ НА ТЕЛЕФОН</p>
                 <p className="text-[10px] text-stone-400 mt-0.5 font-mono">
-                  Запуск как отдельное приложение без браузера
+                  Запуск как отдельное приложение
                 </p>
               </div>
-              {isInstallable ? (
-                <button
-                  id="pwa-install-button"
-                  onClick={install}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-stone-950 text-xs font-bold font-mono rounded-lg transition-colors shadow"
-                >
-                  <Download className="w-3.5 h-3.5" />
-                  <span>СКАЧАТЬ</span>
-                </button>
-              ) : isIOS ? (
-                <button
-                  id="pwa-ios-guide-btn"
-                  onClick={() => setShowIOSPrompt(true)}
-                  className="px-2.5 py-1.5 bg-stone-800 hover:bg-stone-700 text-emerald-400 text-xs font-mono rounded-lg border border-emerald-500/40 transition-colors"
-                >
-                  Инструкция iOS
-                </button>
-              ) : (
-                <span className="text-[10px] text-emerald-400 font-mono">Готово к установке</span>
-              )}
+              <button
+                id="pwa-install-button"
+                onClick={install}
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-stone-950 text-xs font-bold font-mono rounded-lg transition-colors shadow"
+              >
+                <Download className="w-3.5 h-3.5" />
+                <span>СКАЧАТЬ</span>
+              </button>
+            </div>
+          )}
+
+          {isIOS && !isInstalled && (
+            <div className="p-2.5 rounded-xl bg-stone-950/60 border border-stone-800 flex items-center justify-between">
+              <span className="text-xs text-stone-300 font-mono">Версия для iPhone</span>
+              <button
+                onClick={() => setShowIOSPrompt(!showIOSPrompt)}
+                className="text-[11px] font-mono text-emerald-400 underline"
+              >
+                {showIOSPrompt ? 'Скрыть' : 'Как установить?'}
+              </button>
             </div>
           )}
 
           {/* iOS Prompt Guide */}
           {showIOSPrompt && (
-            <div className="p-3 bg-stone-800 rounded-xl border border-stone-700 text-xs font-mono space-y-2">
-              <p className="font-bold text-amber-400">Как установить на iPhone / iPad:</p>
-              <p className="text-stone-300">
-                1. Нажмите кнопку «Поделиться» (иконка квадрата со стрелкой вверх) в Safari.<br />
-                2. Прокрутите список вниз и выберите «На экран „Домой“».
+            <div className="p-3 bg-stone-800 rounded-xl border border-stone-700 text-xs font-mono space-y-1.5">
+              <p className="font-bold text-amber-400">Установка на экран Домой (Safari):</p>
+              <p className="text-stone-300 text-[11px]">
+                Нажмите значок «Поделиться» (квадрат со стрелкой) в браузере Safari и выберите «На экран „Домой“».
               </p>
-              <button
-                onClick={() => setShowIOSPrompt(false)}
-                className="w-full py-1 bg-stone-700 text-stone-200 rounded text-[11px]"
-              >
-                Понятно
-              </button>
             </div>
           )}
 
@@ -248,7 +171,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   {settings.layoutMode === 'phone' && <Check className="w-3.5 h-3.5 text-emerald-400" />}
                 </div>
                 <span className="text-[10px] text-stone-400 font-mono">
-                  Кнопочный телефон с клавиатурой 2-4-6-8
+                  Классика с кнопками
                 </span>
               </button>
 
@@ -268,7 +191,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   {settings.layoutMode === 'touch' && <Check className="w-3.5 h-3.5 text-emerald-400" />}
                 </div>
                 <span className="text-[10px] text-stone-400 font-mono">
-                  Сенсорный D-Pad и свайпы
+                  Сенсорный D-Pad
                 </span>
               </button>
             </div>
@@ -386,10 +309,30 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               </span>
             </button>
           </div>
+
+          {/* Privacy Policy Link */}
+          <div className="pt-2 border-t border-stone-800 flex items-center justify-between text-xs font-mono">
+            <button
+              type="button"
+              onClick={() => {
+                sound.playKeyClick();
+                if (onOpenPrivacyPolicy) {
+                  onOpenPrivacyPolicy();
+                } else {
+                  window.open('./privacy.html', '_blank');
+                }
+              }}
+              className="flex items-center gap-1.5 text-stone-400 hover:text-emerald-400 transition-colors"
+            >
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>Политика конфиденциальности</span>
+            </button>
+            <span className="text-[10px] text-stone-500">Офлайн • Без трекеров</span>
+          </div>
         </div>
 
         {/* Footer */}
-        <div className="pt-3 border-t border-stone-800">
+        <div className="pt-3 border-t border-stone-800 shrink-0">
           <button
             id="btn-apply-settings"
             onClick={onClose}

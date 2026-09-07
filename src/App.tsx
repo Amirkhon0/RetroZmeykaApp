@@ -27,6 +27,7 @@ import { NokiaKeypad } from './components/NokiaKeypad';
 import { TouchControls } from './components/TouchControls';
 import { SettingsModal } from './components/SettingsModal';
 import { StatsModal } from './components/StatsModal';
+import { PrivacyPolicyModal } from './components/PrivacyPolicyModal';
 
 const INITIAL_SNAKE: Point[] = [
   { x: 10, y: 10 },
@@ -75,34 +76,7 @@ export default function App() {
   // Modals state
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isStatsOpen, setIsStatsOpen] = useState(false);
-
-  // Fullscreen Display State
-  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
-
-  useEffect(() => {
-    const handleFsChange = () => {
-      setIsFullscreen(Boolean(document.fullscreenElement));
-    };
-    document.addEventListener('fullscreenchange', handleFsChange);
-    return () => document.removeEventListener('fullscreenchange', handleFsChange);
-  }, []);
-
-  const handleToggleFullscreen = useCallback(async () => {
-    sound.playKeyClick();
-    try {
-      if (!document.fullscreenElement) {
-        if (document.documentElement.requestFullscreen) {
-          await document.documentElement.requestFullscreen();
-        }
-      } else {
-        if (document.exitFullscreen) {
-          await document.exitFullscreen();
-        }
-      }
-    } catch (err) {
-      console.warn('Fullscreen toggle failed:', err);
-    }
-  }, []);
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
 
   // Core Game State
   const [snake, setSnake] = useState<Point[]>(INITIAL_SNAKE);
@@ -634,8 +608,16 @@ export default function App() {
         onClose={() => setIsSettingsOpen(false)}
         settings={settings}
         onUpdateSettings={handleUpdateSettings}
-        isFullscreen={isFullscreen}
-        onToggleFullscreen={handleToggleFullscreen}
+        onOpenPrivacyPolicy={() => {
+          setIsSettingsOpen(false);
+          setIsPrivacyOpen(true);
+        }}
+      />
+
+      {/* Privacy Policy Modal */}
+      <PrivacyPolicyModal
+        isOpen={isPrivacyOpen}
+        onClose={() => setIsPrivacyOpen(false)}
       />
 
       {/* Stats & Records Modal */}
