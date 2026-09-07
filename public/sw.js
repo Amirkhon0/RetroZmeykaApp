@@ -1,10 +1,15 @@
 // Minimal Offline Cache Service Worker for Snake PWA
-const CACHE_NAME = 'snake-retro-v2';
+const CACHE_NAME = 'snake-retro-v3';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './manifest.json',
-  './icon.svg'
+  './icon.svg',
+  './icon-192.png',
+  './icon-512.png',
+  './icon-maskable-512.png',
+  './apple-touch-icon.png',
+  './favicon.png'
 ];
 
 self.addEventListener('install', (event) => {

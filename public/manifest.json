@@ -1,6 +1,6 @@
 {
   "id": "./",
-  "name": "Змейка - Ретро Игра",
+  "name": "Змейка",
   "short_name": "Змейка",
   "description": "Классическая мобильная ретро игра Змейка как на старых кнопочных телефонах.",
   "start_url": "./?source=pwa",
@@ -16,22 +16,43 @@
   "prefer_related_applications": false,
   "icons": [
     {
-      "src": "icon.svg",
+      "src": "icon-192.png",
       "sizes": "192x192",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon.svg",
+      "src": "icon-512.png",
       "sizes": "512x512",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon.svg",
+      "src": "icon-maskable-512.png",
       "sizes": "512x512",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "maskable"
+    },
+    {
+      "src": "icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Играть",
+      "short_name": "Играть",
+      "description": "Быстрый старт игры Змейка",
+      "url": "./?action=play",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
     }
   ]
 }
