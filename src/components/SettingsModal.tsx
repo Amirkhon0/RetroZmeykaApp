@@ -23,8 +23,6 @@ interface SettingsModalProps {
   onUpdateSettings: (newSettings: Partial<GameSettings>) => void;
   isFullscreen: boolean;
   onToggleFullscreen: () => void;
-  isImmersive: boolean;
-  onToggleImmersive: () => void;
 }
 
 export const SettingsModal: React.FC<SettingsModalProps> = ({
@@ -34,8 +32,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   onUpdateSettings,
   isFullscreen,
   onToggleFullscreen,
-  isImmersive,
-  onToggleImmersive,
 }) => {
   const { isInstallable, isInstalled, isIOS, install } = usePWAInstall();
   const [showIOSPrompt, setShowIOSPrompt] = useState(false);
@@ -97,14 +93,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               </span>
             </div>
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="w-full">
               {/* Fullscreen Button */}
               <button
                 onClick={() => {
                   sound.playKeyClick();
                   onToggleFullscreen();
                 }}
-                className={`p-2.5 rounded-lg border text-left flex items-center justify-between transition-all ${
+                className={`w-full p-2.5 rounded-lg border text-left flex items-center justify-between transition-all ${
                   isFullscreen
                     ? 'border-emerald-500 bg-emerald-950/30 text-emerald-300'
                     : 'border-stone-700 bg-stone-800/80 text-stone-300 hover:border-stone-600'
@@ -117,35 +113,15 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     <Maximize2 className="w-4 h-4 text-stone-400" />
                   )}
                   <div>
-                    <p className="text-xs font-bold font-mono">На весь экран</p>
+                    <p className="text-xs font-bold font-mono">На весь экран (Full Screen)</p>
                     <p className="text-[9px] text-stone-400">
-                      {isFullscreen ? 'Активен' : 'Скрыть рамки'}
+                      {isFullscreen ? 'Полноэкранный режим активен' : 'Скрыть системные панели браузера'}
                     </p>
                   </div>
                 </div>
-              </button>
-
-              {/* Clean Immersive Mode Button */}
-              <button
-                onClick={() => {
-                  sound.playKeyClick();
-                  onToggleImmersive();
-                }}
-                className={`p-2.5 rounded-lg border text-left flex items-center justify-between transition-all ${
-                  isImmersive
-                    ? 'border-emerald-500 bg-emerald-950/30 text-emerald-300'
-                    : 'border-stone-700 bg-stone-800/80 text-stone-300 hover:border-stone-600'
-                }`}
-              >
-                <div className="flex items-center gap-2">
-                  <Sparkles className={`w-4 h-4 ${isImmersive ? 'text-emerald-400' : 'text-stone-400'}`} />
-                  <div>
-                    <p className="text-xs font-bold font-mono">Чистый экран</p>
-                    <p className="text-[9px] text-stone-400">
-                      {isImmersive ? 'Без лишних баров' : 'С заголовком'}
-                    </p>
-                  </div>
-                </div>
+                <span className="text-[10px] font-mono font-bold text-emerald-400">
+                  {isFullscreen ? 'ВКЛ' : 'ВКЛЮЧИТЬ'}
+                </span>
               </button>
             </div>
 

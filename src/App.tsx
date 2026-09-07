@@ -27,18 +27,6 @@ import { NokiaKeypad } from './components/NokiaKeypad';
 import { TouchControls } from './components/TouchControls';
 import { SettingsModal } from './components/SettingsModal';
 import { StatsModal } from './components/StatsModal';
-import {
-  Smartphone,
-  Gamepad2,
-  Volume2,
-  VolumeX,
-  RotateCcw,
-  Trophy,
-  Settings as SettingsIcon,
-  Maximize2,
-  Minimize2,
-  Sparkles,
-} from 'lucide-react';
 
 const INITIAL_SNAKE: Point[] = [
   { x: 10, y: 10 },
@@ -88,15 +76,8 @@ export default function App() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isStatsOpen, setIsStatsOpen] = useState(false);
 
-  // Fullscreen and Immersive Display State
+  // Fullscreen Display State
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
-  const [isImmersive, setIsImmersive] = useState<boolean>(() => {
-    try {
-      return localStorage.getItem('snake_immersive') === 'true';
-    } catch {
-      return false;
-    }
-  });
 
   useEffect(() => {
     const handleFsChange = () => {
@@ -121,19 +102,6 @@ export default function App() {
     } catch (err) {
       console.warn('Fullscreen toggle failed:', err);
     }
-  }, []);
-
-  const handleToggleImmersive = useCallback(() => {
-    sound.playKeyClick();
-    setIsImmersive((prev) => {
-      const next = !prev;
-      try {
-        localStorage.setItem('snake_immersive', String(next));
-      } catch {
-        // ignore
-      }
-      return next;
-    });
   }, []);
 
   // Core Game State
@@ -495,142 +463,7 @@ export default function App() {
   const currentTheme = THEMES[settings.theme];
 
   return (
-    <main className="h-full h-[100dvh] w-full bg-stone-950 flex flex-col items-center justify-between p-1 sm:p-3 pt-[max(0.35rem,env(safe-area-inset-top))] pb-[max(0.35rem,env(safe-area-inset-bottom))] text-stone-100 font-sans select-none overflow-hidden">
-      {/* Top Header Navbar / Immersive Minimalist Bar */}
-      {!isImmersive ? (
-        <header className="w-full max-w-md flex items-center justify-between py-1 px-1 mb-1 shrink-0">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md bg-emerald-500 flex items-center justify-center text-stone-950 font-retro font-bold text-[10px]">
-              З
-            </div>
-            <div>
-              <h1 className="text-sm font-retro text-emerald-400 leading-tight">ЗМЕЙКА</h1>
-              <p className="text-[10px] text-stone-400 font-mono leading-none">Ретро 3310</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-1.5">
-            {/* Fullscreen Toggle */}
-            <button
-              id="btn-quick-fullscreen"
-              onClick={handleToggleFullscreen}
-              className="p-1.5 rounded-lg bg-stone-900 border border-stone-800 text-stone-300 hover:text-emerald-400 transition-colors"
-              title={isFullscreen ? 'Выйти из полноэкранного режима' : 'Во весь экран (Full Screen)'}
-            >
-              {isFullscreen ? (
-                <Minimize2 className="w-4 h-4 text-emerald-400" />
-              ) : (
-                <Maximize2 className="w-4 h-4" />
-              )}
-            </button>
-
-            {/* Quick Sound Toggle */}
-            <button
-              id="btn-quick-sound"
-              onClick={() => {
-                const next = !settings.soundEnabled;
-                handleUpdateSettings({ soundEnabled: next });
-                sound.setSoundEnabled(next);
-                if (next) sound.playKeyClick();
-              }}
-              className="p-1.5 rounded-lg bg-stone-900 border border-stone-800 text-stone-300 hover:text-white transition-colors"
-              title={settings.soundEnabled ? 'Выключить звук' : 'Включить звук'}
-            >
-              {settings.soundEnabled ? <Volume2 className="w-4 h-4 text-emerald-400" /> : <VolumeX className="w-4 h-4 text-stone-500" />}
-            </button>
-
-            {/* Quick Layout Mode Switcher */}
-            <button
-              id="btn-quick-layout"
-              onClick={() => {
-                sound.playKeyClick();
-                handleUpdateSettings({
-                  layoutMode: settings.layoutMode === 'phone' ? 'touch' : 'phone',
-                });
-              }}
-              className="flex items-center gap-1 px-2 py-1 rounded-lg bg-stone-900 border border-stone-800 text-xs font-mono text-stone-300 hover:text-white transition-colors"
-              title="Переключить режим корпуса"
-            >
-              {settings.layoutMode === 'phone' ? (
-                <>
-                  <Smartphone className="w-3.5 h-3.5 text-blue-400" />
-                  <span className="text-[10px]">3310</span>
-                </>
-              ) : (
-                <>
-                  <Gamepad2 className="w-3.5 h-3.5 text-emerald-400" />
-                  <span className="text-[10px]">Тач</span>
-                </>
-              )}
-            </button>
-
-            {/* Stats Button */}
-            <button
-              id="btn-quick-stats"
-              onClick={() => {
-                sound.playKeyClick();
-                setIsStatsOpen(true);
-              }}
-              className="p-1.5 rounded-lg bg-stone-900 border border-stone-800 text-stone-300 hover:text-amber-400 transition-colors"
-              title="Рекорды и статистика"
-            >
-              <Trophy className="w-4 h-4 text-amber-400" />
-            </button>
-
-            {/* Settings Button */}
-            <button
-              id="btn-quick-settings"
-              onClick={() => {
-                sound.playKeyClick();
-                setIsSettingsOpen(true);
-              }}
-              className="p-1.5 rounded-lg bg-stone-900 border border-stone-800 text-stone-300 hover:text-white transition-colors"
-              title="Настройки"
-            >
-              <SettingsIcon className="w-4 h-4" />
-            </button>
-          </div>
-        </header>
-      ) : (
-        /* Immersive Mode Ultra-Compact Top Bar */
-        <div className="w-full max-w-md flex items-center justify-between py-1 px-2 shrink-0 opacity-80 hover:opacity-100 transition-opacity">
-          <div className="flex items-center gap-1.5">
-            <span className="text-[10px] font-retro text-emerald-400">ЗМЕЙКА</span>
-            <span className="text-[9px] font-mono text-stone-400 bg-stone-900 px-1.5 py-0.5 rounded border border-stone-800">
-              ЧИСТЫЙ ЭКРАН
-            </span>
-          </div>
-
-          <div className="flex items-center gap-1">
-            <button
-              onClick={handleToggleFullscreen}
-              className="p-1 rounded bg-stone-900 border border-stone-800 text-stone-300 text-[10px] flex items-center gap-1 hover:text-white"
-              title="Полноэкранный режим"
-            >
-              {isFullscreen ? <Minimize2 className="w-3.5 h-3.5 text-emerald-400" /> : <Maximize2 className="w-3.5 h-3.5" />}
-            </button>
-
-            <button
-              onClick={handleToggleImmersive}
-              className="px-2 py-0.5 rounded bg-stone-900 border border-stone-800 text-[10px] font-mono text-stone-300 hover:text-white"
-              title="Выйти из чистого режима"
-            >
-              Меню
-            </button>
-
-            <button
-              onClick={() => {
-                sound.playKeyClick();
-                setIsSettingsOpen(true);
-              }}
-              className="p-1 rounded bg-stone-900 border border-stone-800 text-stone-300 hover:text-white"
-            >
-              <SettingsIcon className="w-3.5 h-3.5" />
-            </button>
-          </div>
-        </div>
-      )}
-
+    <main className="h-full h-[100dvh] w-full bg-stone-950 flex flex-col items-center justify-center p-1 sm:p-2 pt-[max(0.25rem,env(safe-area-inset-top))] pb-[max(0.25rem,env(safe-area-inset-bottom))] text-stone-100 font-sans select-none overflow-hidden">
       {/* Main Game Shell */}
       {settings.layoutMode === 'phone' ? (
         /* ================= AUTHENTIC NOKIA 3310 PHONE BODY ================= */
@@ -803,8 +636,6 @@ export default function App() {
         onUpdateSettings={handleUpdateSettings}
         isFullscreen={isFullscreen}
         onToggleFullscreen={handleToggleFullscreen}
-        isImmersive={isImmersive}
-        onToggleImmersive={handleToggleImmersive}
       />
 
       {/* Stats & Records Modal */}
